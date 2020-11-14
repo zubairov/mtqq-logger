@@ -31,26 +31,26 @@ async function run() {
     const path = t.split('/');
     const body = JSON.parse(m.toString());
     const type = path.shift();
-    path.shift(); // status
     if (type == 'hm') {
       // console.log('Processing HM event');
+      path.shift(); // status
       body.source = path.shift();
       body.event = path.shift();
       dumpEvent(body);
     } else if (type == 'km200') {
-      //console.log('Processing KM200 event');
-      let root = state;
-      while (path.length > 1) {
-        const next = path.shift();
-        if (!root[next]) {
-          root[next] = {};
+      const event = path.shift();
+      //console.log('Processing KM200 event ', event);
+      if (event == 'status') {
+        if (path.length > 2) {
+          body.source = `${path.shift()}_${path.shift()}`;
+        } else {
+          body.source = `${path.shift()}`;
         }
-        root = root[next]
-      }
-      if (body.km200_unitOfMeasure) {
-        root[path.join('_')] = body;
-      } else {
-        root[path.join('_')] = body.val;
+        body.event = path.join('_');
+        //console.log('Dumping event %j', body);
+        dumpEvent(body);
+      } else if (event == 'meta') {
+        // Meta events are ignored for now
       }
     }
   });
