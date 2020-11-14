@@ -36,8 +36,10 @@ async function run() {
       path.shift(); // status
       body.source = path.shift();
       body.event = path.shift();
+      body.origin = 'hm';
       dumpEvent(body);
     } else if (type == 'km200') {
+      body.origin = 'km200';
       const event = path.shift();
       //console.log('Processing KM200 event ', event);
       if (event == 'status') {
@@ -51,6 +53,22 @@ async function run() {
         dumpEvent(body);
       } else if (event == 'meta') {
         // Meta events are ignored for now
+      }
+    } else if (type == 'unifi' || type == 'index') {
+      body.origin = 'unifi';
+      path.shift(); // status
+      if (path.length == 1) {
+        // Client Count
+        body.source = 'unifi';
+        body.event = 'clientCount';
+        dumpEvent(body);
+      } else {
+        const level = path.shift();
+        if (level == 'wifi') {
+          body.source = path.shift();
+          body.event = path.join('_');
+          dumpEvent(body);
+        }
       }
     }
   });
