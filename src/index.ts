@@ -6,9 +6,9 @@ const fs = require('fs');
 
 const TOPIC = '#';
 const state = {};
-const MAX_FILE_SIZE = '1M';
-const LOG_FILE_NAME = '/tmp/mtqq-exporter/mtqq-log-%DATE%';
-const AUDIT_FILE_NAME = '/tmp/mtqq-exporter/audit-log.json';
+const MAX_FILE_SIZE = '10M';
+const LOG_FILE_NAME = '/tmp/mqtt-exporter/mqtt-log-%DATE%';
+const AUDIT_FILE_NAME = '/tmp/mqtt-exporter/audit-log.json';
 
 
 run();
